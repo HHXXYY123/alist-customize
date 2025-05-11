@@ -252,16 +252,16 @@ div#root div.body svg {
   color: rgba(var(--mio-primary));
 }
 
-/* /**底部*/
+/**底部*/
 div#root div.footer {
   display: none;
-} */
+}
 
-div#root div.footer {
+/* div#root div.footer {
   display: flex !important; /* 强制显示容器 */
   opacity: 0.8; /* 可选：降低原有底部透明度 */
   justify-content: center; /* 保持居中 */
-}
+} */
 
 /**工具栏*/
 div.left-toolbar-box,
