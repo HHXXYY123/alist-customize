@@ -252,10 +252,10 @@ div#root div.body svg {
   color: rgba(var(--mio-primary));
 }
 
-/**底部*/
+/* /**底部*/
 div#root div.footer {
   display: none;
-}
+} */
 
 /**工具栏*/
 div.left-toolbar-box,
