@@ -330,3 +330,84 @@ div.hope-c-PJLV-ibcBsNO-css .hope-c-PJLV-ifjOQLV-css {
 div.hope-c-PJLV-ibcBsNO-css div.hope-c-PJLV-idKXllh-css a {
   display: none;
 }
+
+
+/* ===== 原始CSS全部保留（开头部分） ===== */
+:root {
+  --mio-main: 255, 255, 255;
+  --mio-text: 0, 0, 0;
+  --mio-primary: 100, 209, 226;
+  --mio-primary50: 63, 194, 214;
+  --mio-main-opacity: 0.3;
+  /* 其他原始变量... */
+}
+
+.hope-ui-dark {
+  --mio-main: 0, 0, 0;
+  --mio-text: 255, 255, 255;
+  /* 其他暗色变量... */
+}
+
+/* 全部原始样式规则（背景、卡片、字体等）原封不动保留... */
+
+/* ===== 仅修改底部相关部分 ===== */
+/* 原始.footer规则替换为： */
+div#root div.footer {
+  padding: 12px 0 !important;
+  display: flex !important;
+  background: rgba(var(--mio-main), var(--mio-main-opacity)) !important;
+  backdrop-filter: blur(5px) !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* 新增底部子元素样式 */
+.footer > div {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+}
+
+/* 原始AList文字容器 */
+.alist-original-footer {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin-right: 20px !important;
+  font-size: 14px !important;
+  color: rgba(var(--mio-text), 0.9) !important;
+}
+
+/* 登录链接样式 */
+.alist-original-footer a {
+  color: rgba(var(--mio-primary), 0.9) !important;
+  text-decoration: none !important;
+  transition: opacity 0.3s !important;
+  font-weight: 500 !important;
+}
+
+.alist-original-footer a:hover {
+  text-decoration: underline !important;
+  opacity: 0.8 !important;
+}
+
+/* 自定义内容容器 */
+.mio-custom-footer {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 14px !important;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .footer > div {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  .alist-original-footer {
+    margin-right: 0 !important;
+  }
+}
