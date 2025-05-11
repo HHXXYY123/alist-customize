@@ -1,34 +1,32 @@
-/* ===== 你原有的所有CSS代码 ===== */
+/* ============= 您原有全部CSS代码 ============= */
 :root {
   --mio-main: 255, 255, 255;
-  /* 保持你原有的变量定义 */
+  --mio-text: 0, 0, 0;
+  --mio-primary: 100, 209, 226;
+  /* 保持所有原始变量定义 */
   ...
 }
 
-/* 保持你原有的背景、字体、模糊效果等 */
+/* 保留所有背景、模糊、字体等样式 */
 body::before { ... }
 .hope-ui-dark::before { ... }
 div#root { ... }
+/* 确保所有原有样式完整保留 */
 
-/* ===== 新增底部保留代码 ===== */
-/* 保留原生底部容器 */
-.footer {
-  position: relative;
-  z-index: 10 !important;
-  backdrop-filter: blur(5px);
-  background: rgba(var(--mio-main), 0.3) !important;
-}
+/* ============= 仅修改底部隐藏方式 ============= */
+/* 原始代码：完全隐藏底部 */
+/* div#root div.footer { display: none; } */
 
-/* 隐藏原生版权链接但保留容器 */
-.footer a[href*="alist.nn.ci"],
-.footer > div > span:last-child {
+/* 新方案：精准隐藏特定元素 */
+.footer a[href*="alist.nn.ci"],    /* 隐藏AList链接 */
+.footer > div > span:last-child {  /* 隐藏竖线分隔符 */
   display: none !important;
 }
 
-/* 自定义页脚样式（兼容你原有设计） */
-.mio-custom-footer {
-  display: flex !important;
-  gap: 12px;
-  padding: 10px 0;
-  border-top: 1px solid rgba(var(--mio-primary), 0.2);
+/* 新增：保留底部容器样式 */
+.footer {
+  position: relative;
+  z-index: 10;
+  backdrop-filter: blur(5px);
+  background: rgba(var(--mio-main), 0.3) !important;
 }
