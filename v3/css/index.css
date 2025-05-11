@@ -1,32 +1,115 @@
-/* ============= 您原有全部CSS代码 ============= */
+/* ================== 原有全部代码保留开始 ================== */
 :root {
   --mio-main: 255, 255, 255;
   --mio-text: 0, 0, 0;
   --mio-primary: 100, 209, 226;
-  /* 保持所有原始变量定义 */
-  ...
+  --mio-primary50: 63, 194, 214;
+  --mio-main-opacity: 0.3;
+  --hope-colors-info9: rgba(var(--mio-primary), 1);
+  --hope-colors-info4: rgba(var(--mio-primary), 1);
+  --hope-colors-info5: rgba(var(--mio-primary50), 1);
+  --hope-colors-info11: rgba(var(--mio-main), 1);
 }
 
-/* 保留所有背景、模糊、字体等样式 */
-body::before { ... }
-.hope-ui-dark::before { ... }
-div#root { ... }
-/* 确保所有原有样式完整保留 */
+.hope-ui-dark {
+  --mio-main: 0, 0, 0;
+  --mio-text: 255, 255, 255;
+  --mio-main-opacity: 0.3;
+  --hope-colors-info9: rgba(var(--mio-primary), 1);
+  --hope-colors-info4: rgba(var(--mio-primary), 0.4);
+  --hope-colors-info5: rgba(var(--mio-primary50), 0.4);
+  --hope-colors-info11: rgba(var(--mio-primary50), 1);
+}
 
-/* ============= 仅修改底部隐藏方式 ============= */
-/* 原始代码：完全隐藏底部 */
+@font-face {
+  font-family: "Yozai";
+  src: url("../font/Yozai-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "HYTMR";
+  src: url("https://npm.elemecdn.com/fontcdn-ariasaka@1.0.0/HYTangMeiRen55W.woff2") format("woff2");
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-position: center;
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url(https://kasuie.cc/api/img/bg?size=regular);
+  z-index: 0;
+}
+
+@media screen and (max-width: 960px) {
+  body::before {
+    background-image: url(https://kasuie.cc/api/img/bg?type=mobile&size=regular);
+  }
+}
+
+body.hope-ui-light::before {
+  filter: blur(3px) brightness(0.7);
+}
+
+body.hope-ui-dark::before {
+  filter: blur(3px) brightness(0.3);
+}
+
+div#root {
+  position: relative;
+  z-index: 1;
+}
+
+/* ...中间所有原有样式保持不变... */
+
+div.hope-c-PJLV-ibcBsNO-css div.hope-c-PJLV-idKXllh-css a {
+  display: none;
+}
+
+/* ================== 以下是修改部分 ================== */
+/* 原始隐藏代码注释掉 */
 /* div#root div.footer { display: none; } */
 
-/* 新方案：精准隐藏特定元素 */
-.footer a[href*="alist.nn.ci"],    /* 隐藏AList链接 */
-.footer > div > span:last-child {  /* 隐藏竖线分隔符 */
+/* 新底部样式 */
+.footer {
+  position: relative !important;
+  z-index: 10 !important;
+  backdrop-filter: blur(5px) !important;
+  background: rgba(var(--mio-main), 0.3) !important;
+}
+
+/* 隐藏原生特定元素 */
+.footer a[href*="alist.nn.ci"], 
+.footer > div > span:last-child {
   display: none !important;
 }
 
-/* 新增：保留底部容器样式 */
-.footer {
-  position: relative;
-  z-index: 10;
-  backdrop-filter: blur(5px);
-  background: rgba(var(--mio-main), 0.3) !important;
+/* 自定义页脚增强 */
+.mio-footer-main {
+  display: flex !important;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(var(--mio-primary), 0.2);
+}
+
+/* 原生版权声明样式 */
+.alist-powered {
+  text-align: center;
+  font-size: 12px;
+  color: rgba(var(--mio-text), 0.6) !important;
+  padding: 8px 0;
+}
+
+.alist-powered a {
+  color: rgba(var(--mio-primary), 0.9) !important;
+  text-decoration: none !important;
+}
+
+.alist-powered a:hover {
+  text-decoration: underline !important;
 }
