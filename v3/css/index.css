@@ -332,82 +332,72 @@ div.hope-c-PJLV-ibcBsNO-css div.hope-c-PJLV-idKXllh-css a {
 }
 
 
-/* ===== 原始CSS全部保留（开头部分） ===== */
-:root {
-  --mio-main: 255, 255, 255;
-  --mio-text: 0, 0, 0;
-  --mio-primary: 100, 209, 226;
-  --mio-primary50: 63, 194, 214;
-  --mio-main-opacity: 0.3;
-  /* 其他原始变量... */
-}
-
-.hope-ui-dark {
-  --mio-main: 0, 0, 0;
-  --mio-text: 255, 255, 255;
-  /* 其他暗色变量... */
-}
-
-/* 全部原始样式规则（背景、卡片、字体等）原封不动保留... */
-
-/* ===== 仅修改底部相关部分 ===== */
-/* 原始.footer规则替换为： */
+/* 删除原有所有底部相关CSS，替换为以下代码 */
 div#root div.footer {
-  padding: 12px 0 !important;
   display: flex !important;
   background: rgba(var(--mio-main), var(--mio-main-opacity)) !important;
   backdrop-filter: blur(5px) !important;
+  padding: 12px 0;
   position: relative;
   z-index: 2;
+  border-top: 1px solid rgba(var(--mio-primary), 0.2);
 }
 
-/* 新增底部子元素样式 */
-.footer > div {
-  width: 100% !important;
+.footer-container {
+  width: 100%;
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  flex-wrap: wrap !important;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
-/* 原始AList文字容器 */
-.alist-original-footer {
+.alist-original {
   display: flex !important;
-  align-items: center !important;
-  gap: 12px !important;
-  margin-right: 20px !important;
-  font-size: 14px !important;
-  color: rgba(var(--mio-text), 0.9) !important;
+  align-items: center;
+  gap: 10px;
+  color: rgba(var(--mio-text), 0.9);
+  font-size: 14px;
 }
 
-/* 登录链接样式 */
-.alist-original-footer a {
+.alist-original a {
   color: rgba(var(--mio-primary), 0.9) !important;
+  font-weight: 500;
   text-decoration: none !important;
-  transition: opacity 0.3s !important;
-  font-weight: 500 !important;
+  transition: all 0.3s;
 }
 
-.alist-original-footer a:hover {
+.alist-original a:hover {
   text-decoration: underline !important;
-  opacity: 0.8 !important;
+  opacity: 0.8;
 }
 
-/* 自定义内容容器 */
-.mio-custom-footer {
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  font-size: 14px !important;
+.custom-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-/* 响应式调整 */
+.custom-footer-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.custom-footer-item img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.separator {
+  opacity: 0.5;
+  user-select: none;
+}
+
 @media (max-width: 768px) {
-  .footer > div {
-    flex-direction: column !important;
-    gap: 8px !important;
-  }
-  .alist-original-footer {
-    margin-right: 0 !important;
+  .footer-container {
+    flex-direction: column;
+    gap: 8px;
   }
 }
