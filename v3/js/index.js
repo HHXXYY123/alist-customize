@@ -1,40 +1,119 @@
-/* ============= 您原有全部JS代码 ============= */
+/*
+ * @Author: kasuie
+ * @Date: 2024-04-24 15:35:59
+ * @LastEditors: kasuie
+ * @LastEditTime: 2024-11-05 09:38:54
+ * @Description: 保留原生底部版本
+ */
 let footer = false;
-const footerStyle = `...`; // 保持原有完整样式
-const onPatchStyle = (style) => { ... };
-const onCreateElement = (tag, attrs) => { ... };
 
-/* ============= 仅修改 renderFooter 函数 ============= */
+const footerStyle = `
+  .footer {
+    padding-bottom: 10px;
+    padding-top: 10px;
+    display: flex !important;
+  }
+  .mio-footer-main {
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+  }
+  .mio-footer-main > img {
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 50%;
+  }
+  .mio-footer-main > a:hover {
+    text-decoration: underline;
+  }
+  .markdown-body li>p {
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+  }
+  /* 新增原生声明样式 */
+  .alist-powered {
+    width: 100%;
+    margin-top: 8px;
+  }
+`;
+
+const onPatchStyle = (style) => {
+  const styleElement = document.createElement("style");
+  styleElement.textContent = style;
+  const head = document.head || document.getElementsByTagName("head")[0];
+  head.appendChild(styleElement);
+};
+
+const onCreateElement = (tag, attrs) => {
+  const dom = document.createElement(tag);
+  if (attrs && typeof attrs == "object") {
+    for (const key in attrs) {
+      if (Object.hasOwnProperty.call(attrs, key) && attrs[key]) {
+        dom.setAttribute(key, attrs[key]);
+      }
+    }
+  }
+  return dom;
+};
+
 const renderFooter = (data) => {
   const target = document.querySelector(".footer > div");
   if (target) {
-    // 保留原生容器结构
-    const nativeLinks = target.querySelectorAll('a, span');
+    onPatchStyle(footerStyle);
+
+    // 保留修改点：仅移除原生版权元素
+    const nativeLinks = target.querySelectorAll('a[href*="alist"], span');
     nativeLinks.forEach(el => el.remove());
 
-    // 创建新容器（保留您原有逻辑）
+    // 保留原有生成逻辑
     target.classList.add("mio-footer-main");
-    
-    // ▶▶▶ 新增：插入原生版权声明 ◀◀◀
-    const poweredBy = document.createElement('div');
-    poweredBy.innerHTML = '<span>由 AList 驱动</span>';
-    poweredBy.style.cssText = 'text-align:center;font-size:12px;color:rgba(var(--mio-text),0.6);padding:8px 0;';
-
-    // 您的原有链接生成逻辑（完整保留）
     if (data?.length) {
       for (let index = 0; index < data.length; index++) {
-        // 保持原有创建链接逻辑...
-        const split = onCreateElement("span", null);
-        split.innerText = "|";
-        // ...其他代码
+        const { url: href, text, icon, target: aTarget } = data[index];
+        const aDom = onCreateElement("a", { target: aTarget || null, href });
+        const ImgDom = icon
+          ? onCreateElement("img", {
+              src: `https://api.remio.cc/icon/${new URL(href).host}.ico`,
+            })
+          : null;
+        aDom && (aDom.innerText = text);
+        if (index) {
+          const split = onCreateElement("span", null);
+          split.innerText = "|";
+          split && target.appendChild(split);
+        }
+        ImgDom && target.appendChild(ImgDom);
+        aDom && target.appendChild(aDom);
       }
     }
 
-    // ▶▶▶ 追加原生声明到容器底部 ◀◀◀
+    // 新增：插入原生版权声明
+    const poweredBy = document.createElement('div');
+    poweredBy.className = 'alist-powered';
+    poweredBy.innerHTML = '由 <a href="https://alist.nn.ci" target="_blank">AList</a> 驱动';
     target.appendChild(poweredBy);
+
     footer = true;
   }
 };
 
-// 保持原有 init 函数完整
-const init = () => { ... };
+const init = () => {
+  const footerDataDom = document.querySelector("#footer-data");
+  if (footerDataDom) {
+    let footerData = JSON.parse(
+      document.querySelector("#footer-data").innerText
+    );
+    let count = 0;
+    const interval = setInterval(() => {
+      if (footer || count > 10) clearInterval(interval);
+      ++count;
+      renderFooter(footerData);
+    }, 300);
+  }
+  // const navHome = document.querySelector(".hope-c-PJLV-ibMsOCJ-css");
+  // if (navHome) {
+  //   navHome.innerHTML = "✨";
+  // }
+};
+
+init();
