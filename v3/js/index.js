@@ -7,6 +7,11 @@
  */
 let footer = false;
 
+// 在 renderFooter 中追加而不是替换
+const originalText = document.createElement('div');
+originalText.innerHTML = '由 <a href="https://alist.nn.ci">AList</a> 驱动';
+target.appendChild(originalText);
+
 const footerStyle = `
   .footer {
     padding-bottom: 10px;
