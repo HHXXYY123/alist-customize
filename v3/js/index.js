@@ -1,119 +1,112 @@
-/*
- * @Author: kasuie
- * @Date: 2024-04-24 15:35:59
- * @LastEditors: kasuie
- * @LastEditTime: 2024-11-05 09:38:54
- * @Description: 保留原生底部版本
- */
-let footer = false;
-
-const footerStyle = `
-  .footer {
-    padding-bottom: 10px;
-    padding-top: 10px;
-    display: flex !important;
+// ===== 配置读取 =====
+const getFooterConfig = () => {
+  try {
+    const el = document.getElementById('footer-data');
+    return el ? JSON.parse(el.textContent) : null;
+  } catch (e) {
+    console.error('Footer config error:', e);
+    return null;
   }
-  .mio-footer-main {
-    font-size: 14px;
-    transition: all 0.3s ease-in-out;
-  }
-  .mio-footer-main > img {
-    width: 18px !important;
-    height: 18px !important;
-    border-radius: 50%;
-  }
-  .mio-footer-main > a:hover {
-    text-decoration: underline;
-  }
-  .markdown-body li>p {
-    font-size: 14px;
-    margin-top: 10px;
-    margin-bottom: 0px;
-  }
-  /* 新增原生声明样式 */
-  .alist-powered {
-    width: 100%;
-    margin-top: 8px;
-  }
-`;
-
-const onPatchStyle = (style) => {
-  const styleElement = document.createElement("style");
-  styleElement.textContent = style;
-  const head = document.head || document.getElementsByTagName("head")[0];
-  head.appendChild(styleElement);
 };
 
-const onCreateElement = (tag, attrs) => {
-  const dom = document.createElement(tag);
-  if (attrs && typeof attrs == "object") {
-    for (const key in attrs) {
-      if (Object.hasOwnProperty.call(attrs, key) && attrs[key]) {
-        dom.setAttribute(key, attrs[key]);
+// ===== DOM构建器 =====
+const buildFooterItem = (item) => {
+  const container = document.createElement('span');
+  container.style.display = 'flex';
+  container.style.alignItems = 'center';
+  container.style.gap = '6px';
+
+  if (item.icon) {
+    const img = new Image();
+    img.src = `https://api.remio.cc/icon/${new URL(item.url).host}.ico`;
+    img.style.width = '16px';
+    img.style.height = '16px';
+    img.style.borderRadius = '50%';
+    img.onerror = () => img.remove();
+    container.appendChild(img);
+  }
+
+  const link = document.createElement('a');
+  link.href = item.url;
+  link.target = item.target || '_blank';
+  link.textContent = item.text;
+  link.style.color = `rgba(var(--mio-primary), 0.9)`;
+  container.appendChild(link);
+
+  return container;
+};
+
+// ===== 主渲染函数 =====
+const renderFooter = () => {
+  const footerContainer = document.querySelector('.footer > div');
+  if (!footerContainer) return;
+
+  // 保留或创建原始AList信息
+  let originalFooter = footerContainer.querySelector('.alist-original-footer');
+  if (!originalFooter) {
+    originalFooter = document.createElement('div');
+    originalFooter.className = 'alist-original-footer';
+    originalFooter.innerHTML = `
+      <span>由 AList 驱动</span>
+      <span style="opacity:0.5">|</span>
+      <a href="/@login">登录</a>
+    `;
+  }
+
+  // 创建新容器
+  const newContainer = document.createElement('div');
+  newContainer.style.display = 'flex';
+  newContainer.style.alignItems = 'center';
+  newContainer.style.flexWrap = 'wrap';
+  newContainer.style.justifyContent = 'center';
+  newContainer.style.width = '100%';
+  newContainer.style.gap = '12px';
+
+  // 添加原始内容
+  newContainer.appendChild(originalFooter);
+
+  // 添加自定义内容
+  const config = getFooterConfig();
+  if (config?.length) {
+    const separator = document.createElement('span');
+    separator.textContent = '|';
+    separator.style.opacity = '0.5';
+    newContainer.appendChild(separator);
+
+    config.forEach((item, index) => {
+      if (index > 0) {
+        const sep = document.createElement('span');
+        sep.textContent = '|';
+        sep.style.opacity = '0.5';
+        newContainer.appendChild(sep);
       }
+      newContainer.appendChild(buildFooterItem(item));
+    });
+  }
+
+  // 应用新结构
+  footerContainer.innerHTML = '';
+  footerContainer.appendChild(newContainer);
+};
+
+// ===== 初始化 =====
+const initFooter = () => {
+  // 方法1：直接尝试渲染
+  renderFooter();
+
+  // 方法2：备用检测（针对动态加载情况）
+  let attempts = 0;
+  const interval = setInterval(() => {
+    if (document.querySelector('.footer > div') || attempts++ > 5) {
+      clearInterval(interval);
+      renderFooter();
     }
-  }
-  return dom;
+  }, 300);
 };
 
-const renderFooter = (data) => {
-  const target = document.querySelector(".footer > div");
-  if (target) {
-    onPatchStyle(footerStyle);
-
-    // 保留修改点：仅移除原生版权元素
-    const nativeLinks = target.querySelectorAll('a[href*="alist"], span');
-    nativeLinks.forEach(el => el.remove());
-
-    // 保留原有生成逻辑
-    target.classList.add("mio-footer-main");
-    if (data?.length) {
-      for (let index = 0; index < data.length; index++) {
-        const { url: href, text, icon, target: aTarget } = data[index];
-        const aDom = onCreateElement("a", { target: aTarget || null, href });
-        const ImgDom = icon
-          ? onCreateElement("img", {
-              src: `https://api.remio.cc/icon/${new URL(href).host}.ico`,
-            })
-          : null;
-        aDom && (aDom.innerText = text);
-        if (index) {
-          const split = onCreateElement("span", null);
-          split.innerText = "|";
-          split && target.appendChild(split);
-        }
-        ImgDom && target.appendChild(ImgDom);
-        aDom && target.appendChild(aDom);
-      }
-    }
-
-    // 新增：插入原生版权声明
-    const poweredBy = document.createElement('div');
-    poweredBy.className = 'alist-powered';
-    poweredBy.innerHTML = '由 <a href="https://alist.nn.ci" target="_blank">AList</a> 驱动';
-    target.appendChild(poweredBy);
-
-    footer = true;
-  }
-};
-
-const init = () => {
-  const footerDataDom = document.querySelector("#footer-data");
-  if (footerDataDom) {
-    let footerData = JSON.parse(
-      document.querySelector("#footer-data").innerText
-    );
-    let count = 0;
-    const interval = setInterval(() => {
-      if (footer || count > 10) clearInterval(interval);
-      ++count;
-      renderFooter(footerData);
-    }, 300);
-  }
-  // const navHome = document.querySelector(".hope-c-PJLV-ibMsOCJ-css");
-  // if (navHome) {
-  //   navHome.innerHTML = "✨";
-  // }
-};
-
-init();
+// 启动
+if (document.readyState === 'complete') {
+  initFooter();
+} else {
+  window.addEventListener('load', initFooter);
+}
